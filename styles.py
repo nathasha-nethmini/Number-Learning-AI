@@ -187,7 +187,7 @@ def load_custom_css(theme="🦄 Magic"):
         }}
         
         /* Rounded buttons adjustments & animations */
-        div.stButton > button, button[data-testid="baseButton-secondary"], button[data-testid="baseButton-primary"] {
+        div.stButton > button, button[data-testid="baseButton-secondary"], button[data-testid="baseButton-primary"] {{
             border-radius: 24px !important;
             font-weight: 900 !important;
             font-size: 18px !important;
@@ -196,24 +196,24 @@ def load_custom_css(theme="🦄 Magic"):
             background-color: var(--primary-accent) !important;
             color: white !important;
             border: none !important;
-        }
+        }}
         
-        div.stButton > button:hover, button[data-testid="baseButton-secondary"]:hover, button[data-testid="baseButton-primary"]:hover {
+        div.stButton > button:hover, button[data-testid="baseButton-secondary"]:hover, button[data-testid="baseButton-primary"]:hover {{
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             background-color: var(--secondary-accent) !important;
             color: white !important;
-        }
+        }}
         
         /* Ensure metrics have high-contrast text */
-        div[data-testid="stMetricValue"], div[data-testid="stMetricLabel"], [data-testid="stMetricValue"] > div {
+        div[data-testid="stMetricValue"], div[data-testid="stMetricLabel"], [data-testid="stMetricValue"] > div {{
             color: var(--text-color) !important;
-        }
+        }}
         
         /* Specific animation for primary button */
-        button[data-testid="baseButton-primary"] {
+        button[data-testid="baseButton-primary"] {{
             animation: pulse 2s infinite;
-        }
+        }}
 
         @keyframes pulse {{
             0% {{
