@@ -85,15 +85,15 @@ def load_custom_css(theme="🦄 Magic"):
         }}
         
         /* Modern Rounded Kids Card Containers */
-        .kids-card {{
-            background-color: var(--bg-card);
-            padding: 26px;
-            border-radius: 28px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-            border: 3px solid var(--card-border);
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--text-color);
+        div[data-testid="stVerticalBlockBorderWrapper"] {{
+            background-color: var(--bg-card) !important;
+            padding: 26px !important;
+            border-radius: 28px !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06) !important;
+            border: 3px solid var(--card-border) !important;
+            text-align: center !important;
+            margin-bottom: 20px !important;
+            color: var(--text-color) !important;
         }}
         
         /* Playful Header Banner Gradient */

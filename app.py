@@ -192,50 +192,47 @@ target = st.session_state.target_digit
 emoji, object_name = number_objects[target]
 
 with left_col:
-    st.markdown('<div class="kids-card">', unsafe_allow_html=True)
-    st.markdown('<p style="font-size: 22px; font-weight: bold; margin:0;">Your Challenge Sparkle:</p>', unsafe_allow_html=True)
-    
-    st.markdown(f"""
-    <div class="target-box">
-        <div class="target-num">{target}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    object_display = emoji if target == 0 else emoji * target
-    
-    st.markdown(f"""
-    <div class="object-display">{object_display}</div>
-    <div class="object-label">{target} {object_name}</div>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown('<p style="font-size: 22px; font-weight: bold; margin:0; text-align:center;">Your Challenge Sparkle:</p>', unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="target-box">
+            <div class="target-num">{target}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        object_display = emoji if target == 0 else emoji * target
+        
+        st.markdown(f"""
+        <div class="object-display" style="text-align:center;">{object_display}</div>
+        <div class="object-label" style="text-align:center;">{target} {object_name}</div>
+        """, unsafe_allow_html=True)
 
 with right_col:
-    st.markdown('<div class="kids-card">', unsafe_allow_html=True)
-    st.markdown(f'<p style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">✏️ Draw the number {target} on the magic board below:</p>', unsafe_allow_html=True)
-    
-    c_left, c_mid, c_right = st.columns([1, 5, 1])
-    with c_mid:
-        canvas = st_canvas(
-            fill_color="black",
-            stroke_width=14,  # Smooth canvas stroke width
-            stroke_color="white",
-            background_color="black",
-            height=280,
-            width=280,
-            drawing_mode="freedraw",
-            key=f"canvas_{st.session_state.canvas_key}"
-        )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    if st.button(action_button_text, use_container_width=True, type="primary"):
-        if canvas.image_data is None:
-            st.warning("Please draw a number first 😊")
-        else:
-            st.session_state.show_result = True
-            st.rerun()
-            
-    st.markdown('</div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown(f'<p style="font-size: 20px; font-weight: bold; margin-bottom: 15px; text-align:center;">✏️ Draw the number {target} on the magic board below:</p>', unsafe_allow_html=True)
+        
+        c_left, c_mid, c_right = st.columns([1, 5, 1])
+        with c_mid:
+            canvas = st_canvas(
+                fill_color="black",
+                stroke_width=14,  # Smooth canvas stroke width
+                stroke_color="white",
+                background_color="black",
+                height=280,
+                width=280,
+                drawing_mode="freedraw",
+                key=f"canvas_{st.session_state.canvas_key}"
+            )
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        if st.button(action_button_text, use_container_width=True, type="primary"):
+            if canvas.image_data is None:
+                st.warning("Please draw a number first 😊")
+            else:
+                st.session_state.show_result = True
+                st.rerun()
 
 # ===============================
 # CNN PROCESSING & RENDERING (Logic Safe)
