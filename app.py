@@ -277,7 +277,9 @@ if st.session_state.show_result:
             st.session_state.correct_count += 1
             if theme == "🚀 Space":
                 st.snow()
-            else:
+            elif theme =="🦖 Dino":
+                st.balloons()
+            elif theme =="🦄 Magic":
                 st.balloons()
             message = random.choice(encouragements)
             
