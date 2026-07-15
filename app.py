@@ -19,9 +19,10 @@ st.set_page_config(
 )
 
 # Theme Selection
-theme = st.sidebar.selectbox(
+theme = st.sidebar.radio(
     "🌍 Choose Your World!",
-    ["🦄 Magic", "🚀 Space", "🦖 Dino"]
+    ["🦄 Magic", "🚀 Space", "🦖 Dino"],
+    index=0
 )
 
 load_custom_css(theme)
@@ -155,14 +156,30 @@ with m1:
     )
 
 with m2:
-    st.metric("📝 Tries ✨", st.session_state.total_count)
+    st.markdown(
+        f"""
+        <div class="score-board">
+        📝 Tries ✨<br>
+        <span style="font-size: 24px; font-weight: bold;">{st.session_state.total_count}</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 with m3:
     if st.session_state.total_count > 0:
         learning_score = (st.session_state.correct_count / st.session_state.total_count) * 100
     else:
         learning_score = 0
-    st.metric("🏆 Power Level 🌟", f"{learning_score:.0f}%")
+    st.markdown(
+        f"""
+        <div class="score-board">
+        🏆 Power Level 🌟<br>
+        <span style="font-size: 24px; font-weight: bold;">{learning_score:.0f}%</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
