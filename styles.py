@@ -226,6 +226,10 @@ def load_custom_css(theme="🦄 Magic"):
                 transform: scale(1);
             }}
         }}
+        /* Hide Streamlit top header (Deploy button & menu) */
+        [data-testid="stHeader"] {{
+            display: none !important;
+        }}
         
     </style>
     """, unsafe_allow_html=True)
