@@ -215,17 +215,17 @@ def load_custom_css(theme="🦄 Magic"):
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% {
+        @keyframes pulse {{
+            0% {{
                 transform: scale(1);
-            }
-            50% {
+            }}
+            50% {{
                 transform: scale(1.03);
-            }
-            100% {
+            }}
+            100% {{
                 transform: scale(1);
-            }
-        }
+            }}
+        }}
         
     </style>
     """, unsafe_allow_html=True)
