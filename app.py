@@ -18,13 +18,18 @@ st.set_page_config(
     layout="wide"
 )
 
-# Theme Selection
-theme = st.radio(
-    "🌍 Choose Your World!",
-    ["🦄 Magic", "🚀 Space", "🦖 Dino"],
-    index=0,
-    horizontal=True
-)
+# Theme Selection Layout
+st.markdown('<div class="theme-selector-wrapper">', unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    theme = st.radio(
+        "🌍 Choose Your World!",
+        ["🦄 Magic", "🚀 Space", "🦖 Dino"],
+        index=0,
+        horizontal=True,
+        label_visibility="collapsed"
+    )
+st.markdown('</div>', unsafe_allow_html=True)
 
 load_custom_css(theme)
 
@@ -185,7 +190,6 @@ with right_col:
         draw_mode = "freedraw"
         stroke_color = "#000000"
 
-        st.markdown('<div class="canvas-container">', unsafe_allow_html=True)
         canvas = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",
             stroke_width=18,
@@ -196,7 +200,6 @@ with right_col:
             drawing_mode=draw_mode,
             key=f"canvas_{st.session_state.canvas_key}"
         )
-        st.markdown('</div>', unsafe_allow_html=True)
         
         if st.button(action_button_text, use_container_width=True, type="primary"):
             if canvas.image_data is None:

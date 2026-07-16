@@ -144,20 +144,25 @@ def load_custom_css(theme="🦄 Magic"):
             word-wrap: break-word;
         }}
 
-        /* BEAUTIFUL CANVAS FRAME */
-        .canvas-container {{
+        /* THEME SELECTOR GLASS PILL */
+        .theme-selector-wrapper {{
+            background: {card_bg};
+            backdrop-filter: blur(10px);
+            border: 2px solid {border_color};
+            border-radius: 40px;
+            padding: 8px 15px;
+            margin: 0 auto 20px auto;
+            max-width: 450px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin: 20px auto;
-            max-width: 100%;
-            overflow: hidden;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15), inset 0 0 0 8px #F8F9FA;
-            background-color: #FFFFFF;
-            border: 10px solid {primary};
-            padding: 5px;
-            position: relative;
+        }}
+        
+        div.row-widget.stRadio p {{
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: {text_color} !important;
+            padding-right: 15px !important;
         }}
         
         /* PREMIUM BUTTONS */
@@ -192,24 +197,5 @@ def load_custom_css(theme="🦄 Magic"):
             margin-bottom: 20px;
         }}
 
-        /* RADIO BUTTON (Theme Selector) ENHANCEMENTS */
-        div.row-widget.stRadio > div {{
-            background: {card_bg} !important;
-            backdrop-filter: blur(10px) !important;
-            padding: 10px 20px !important;
-            border-radius: 25px !important;
-            display: flex !important;
-            justify-content: center !important;
-            border: 2px solid {border_color} !important;
-            gap: 20px !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }}
-
-        div.row-widget.stRadio [data-testid="stWidgetLabel"] p {{
-            color: {text_color} !important;
-            font-weight: 700 !important;
-            font-size: 18px !important;
-        }}
-        
     </style>
     """, unsafe_allow_html=True)
