@@ -19,10 +19,11 @@ st.set_page_config(
 )
 
 # Theme Selection
-theme = st.sidebar.radio(
+theme = st.radio(
     "🌍 Choose Your World!",
     ["🦄 Magic", "🚀 Space", "🦖 Dino"],
-    index=0
+    index=0,
+    horizontal=True
 )
 
 load_custom_css(theme)
@@ -132,100 +133,70 @@ def try_again_action():
 # ===============================
 # HEADER BANNER
 # ===============================
-st.markdown(f"""
-<div class="title-banner">
-    <h1>{app_title}</h1>
-    <p>{app_subtitle}</p>
-</div>
-""", unsafe_allow_html=True)
+# ===============================
+# COMPACT HEADER BANNER
+# ===============================
+st.markdown(f'<div class="title-banner-compact"><h2>{app_title}</h2></div>', unsafe_allow_html=True)
 
 # ===============================
-# SCORE DISPLAY
+# COMPACT SCORE DISPLAY
 # ===============================
 m1, m2, m3 = st.columns(3)
 
 with m1:
-    st.markdown(
-        f"""
-        <div class="score-board">
-        🌟 Stars Earned<br>
-        <span style="font-size: 24px;">{"⭐"*min(st.session_state.correct_count, 7) if st.session_state.correct_count > 0 else "✨"}</span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown(f'<div class="score-board-compact">⭐ Stars: {st.session_state.correct_count}</div>', unsafe_allow_html=True)
 
 with m2:
-    st.markdown(
-        f"""
-        <div class="score-board">
-        📝 Tries ✨<br>
-        <span style="font-size: 24px; font-weight: bold;">{st.session_state.total_count}</span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown(f'<div class="score-board-compact">📝 Tries: {st.session_state.total_count}</div>', unsafe_allow_html=True)
 
 with m3:
     if st.session_state.total_count > 0:
         learning_score = (st.session_state.correct_count / st.session_state.total_count) * 100
     else:
         learning_score = 0
-    st.markdown(
-        f"""
-        <div class="score-board">
-        🏆 Power Level 🌟<br>
-        <span style="font-size: 24px; font-weight: bold;">{learning_score:.0f}%</span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f'<div class="score-board-compact">🏆 Power: {learning_score:.0f}%</div>', unsafe_allow_html=True)
 
 # ===============================
-# PLAYSPACE COLUMNS
+# PLAYSPACE COLUMNS (Compact & Mobile Responsive)
 # ===============================
-left_col, right_col = st.columns([1, 1], gap="large")
+left_col, right_col = st.columns([1, 1], gap="medium")
 
 target = st.session_state.target_digit
 emoji, object_name = number_objects[target]
 
 with left_col:
     with st.container(border=True):
-        st.markdown('<p style="font-size: 22px; font-weight: bold; margin:0; text-align:center;">Your Challenge Sparkle:</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size: 16px; font-weight: bold; margin:0; text-align:center;">Your Challenge:</p>', unsafe_allow_html=True)
         
-        st.markdown(f"""
-        <div class="target-box">
-            <div class="target-num">{target}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
+        t_left, t_right = st.columns([1, 2])
+        with t_left:
+            st.markdown(f'<div class="target-box-compact"><div class="target-num-compact">{target}</div></div>', unsafe_allow_html=True)
+        with t_right:
+            st.markdown(f'<div style="display: flex; flex-direction: column; justify-content: center; height: 80px;"><div class="object-label-compact">{target} {object_name}</div></div>', unsafe_allow_html=True)
+            
         object_display = emoji if target == 0 else emoji * target
-        
-        st.markdown(f"""
-        <div class="object-display" style="text-align:center;">{object_display}</div>
-        <div class="object-label" style="text-align:center;">{target} {object_name}</div>
-        """, unsafe_allow_html=True)
+        st.markdown(f'<div class="object-display-compact">{object_display}</div>', unsafe_allow_html=True)
 
 with right_col:
     with st.container(border=True):
-        st.markdown(f'<p style="font-size: 20px; font-weight: bold; margin-bottom: 15px; text-align:center;">✏️ Draw the number {target} on the magic board below:</p>', unsafe_allow_html=True)
+        st.markdown(f'<p style="font-size: 16px; font-weight: bold; margin: 0; text-align:center;">✏️ Draw the number {target}:</p>', unsafe_allow_html=True)
         
-        c_left, c_mid, c_right = st.columns([1, 5, 1])
-        with c_mid:
-            canvas = st_canvas(
-                fill_color="black",
-                stroke_width=14,  # Smooth canvas stroke width
-                stroke_color="white",
-                background_color="black",
-                height=280,
-                width=280,
-                drawing_mode="freedraw",
-                key=f"canvas_{st.session_state.canvas_key}"
-            )
-        
-        st.markdown("<br>", unsafe_allow_html=True)
+        bg_color = "#FFFFFF"
+        draw_mode = "freedraw"
+        stroke_color = "#000000"
+
+        st.markdown('<div class="canvas-container">', unsafe_allow_html=True)
+        canvas = st_canvas(
+            fill_color="rgba(255, 165, 0, 0.3)",
+            stroke_width=18,
+            stroke_color=stroke_color,
+            background_color=bg_color,
+            height=280,
+            width=280,
+            drawing_mode=draw_mode,
+            key=f"canvas_{st.session_state.canvas_key}"
+        )
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if st.button(action_button_text, use_container_width=True, type="primary"):
             if canvas.image_data is None:
@@ -243,8 +214,11 @@ if st.session_state.show_result:
     img = Image.fromarray(canvas.image_data.astype("uint8"))
     img = img.convert("L")
     img_array = np.array(img)
+    
+    # Whiteboard uses white background, CNN expects black background
+    img_array = 255 - img_array
 
-    if np.max(img_array) == 0:
+    if np.max(img_array) < 50:
         st.warning("Please draw something beautiful on the board first!")
         st.session_state.show_result = False
     else:
@@ -283,30 +257,14 @@ if st.session_state.show_result:
                 st.balloons()
             message = random.choice(encouragements)
             
-            st.markdown(f"""
-            <div class="success-card">
-                <h2 style="margin:0; font-size:38px;">{message}</h2>
-                <p style="font-size:24px; margin: 15px 0;">You beautifully wrote the number <b style="font-size:32px;">{prediction}</b>!</p>
-                <span style="background: rgba(26, 188, 156, 0.15); padding: 6px 16px; border-radius: 12px; font-size:14px; font-weight:bold;">
-                    ✨ Match Meter: {model_score:.0f}%
-                </span>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f'<div class="success-card"><h2 style="margin:0; font-size:28px;">{message}</h2><p style="font-size:18px; margin: 10px 0;">You beautifully wrote the number <b style="font-size:24px;">{prediction}</b>!</p><span style="background: rgba(26, 188, 156, 0.15); padding: 4px 12px; border-radius: 8px; font-size:12px; font-weight:bold;">✨ Match Meter: {model_score:.0f}%</span></div>', unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.button("🚀 Journey to a New Number", use_container_width=True, on_click=next_number_action)
 
         # TRY AGAIN
         else:
-            st.markdown(f"""
-            <div class="fail-card">
-                <h2 style="margin:0; font-size:34px;">😊 Splendid Effort!</h2>
-                <p style="font-size:22px; margin: 15px 0;">Oops! My magic lens saw a <b>{prediction}</b>, let's try drawing a <b>{target}</b> again!</p>
-                <span style="background: rgba(231, 76, 60, 0.15); padding: 6px 16px; border-radius: 12px; font-size:14px; font-weight:bold;">
-                    ✨ Match Meter: {model_score:.0f}%
-                </span>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f'<div class="fail-card"><h2 style="margin:0; font-size:26px;">😊 Splendid Effort!</h2><p style="font-size:18px; margin: 10px 0;">Oops! My magic lens saw a <b>{prediction}</b>, let\'s try drawing a <b>{target}</b> again!</p><span style="background: rgba(231, 76, 60, 0.15); padding: 4px 12px; border-radius: 8px; font-size:12px; font-weight:bold;">✨ Match Meter: {model_score:.0f}%</span></div>', unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
             action_col1, action_col2 = st.columns(2)

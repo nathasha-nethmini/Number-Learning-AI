@@ -2,233 +2,213 @@ import streamlit as st
 
 def load_custom_css(theme="🦄 Magic"):
     if theme == "🚀 Space":
-        css_vars = """
-            --bg-app: #0B0C10;            
-            --bg-card: #1F2833;           
-            --primary-accent: #66FCF1;      
-            --secondary-accent: #45A29E;    
-            --highlight: #C5C6C7;         
-            --soft-bg: #111B24;      
-            --score-bg: #FFC300;         
-            --text-color: #FFFFFF;
-            --text-dark: #C5C6C7;
-            --card-border: #45A29E;
-            --success-bg1: #112A2A;
-            --success-bg2: #163832;
-            --success-border: #45A29E;
-            --success-text: #66FCF1;
-            --fail-bg1: #3A1C1C;
-            --fail-bg2: #4A2020;
-            --fail-border: #E74C3C;
-            --fail-text: #FF6B6B;
-            --score-text: #1F2833;
-            --score-border: #FFC300;
-        """
+        bg_anim = "linear-gradient(-45deg, #0B0C10, #1F2833, #111B24, #1B263B)"
+        primary = "#66FCF1"
+        secondary = "#45A29E"
+        card_bg = "rgba(11, 12, 16, 0.65)"
+        text_color = "#FFFFFF"
+        border_color = "rgba(102, 252, 241, 0.3)"
     elif theme == "🦖 Dino":
-        css_vars = """
-            --bg-app: #F4F1DE;            
-            --bg-card: #FFFFFF;           
-            --primary-accent: #81B29A;      
-            --secondary-accent: #A8D5BA;    
-            --highlight: #E07A5F;         
-            --soft-bg: #F2E8CF;      
-            --score-bg: #F2CC8F;         
-            --text-color: #3D405B;
-            --text-dark: #3D405B;
-            --card-border: #81B29A;
-            --success-bg1: #E8F8F5;
-            --success-bg2: #A2E8DD;
-            --success-border: #1ABC9C;
-            --success-text: #117864;
-            --fail-bg1: #FFECEC;
-            --fail-bg2: #FFC4C4;
-            --fail-border: #E74C3C;
-            --fail-text: #922B21;
-            --score-text: #3D405B;
-            --score-border: #E07A5F;
-        """
+        bg_anim = "linear-gradient(-45deg, #FDFBF7, #F4F1DE, #E07A5F, #81B29A)"
+        primary = "#81B29A"
+        secondary = "#F2CC8F"
+        card_bg = "rgba(253, 251, 247, 0.65)"
+        text_color = "#3D405B"
+        border_color = "rgba(129, 178, 154, 0.4)"
     else: # Magic
-        css_vars = """
-            --bg-app: #FFFDF4;            
-            --bg-card: #FFFFFF;           
-            --primary-accent: #FF6B9D;      
-            --secondary-accent: #FF8EAF;    
-            --highlight: #4ECDC4;         
-            --soft-bg: #EDF9F8;      
-            --score-bg: #FFE66D;         
-            --text-color: #2C3E50;
-            --text-dark: #2C3E50;
-            --card-border: #FFEBEF;
-            --success-bg1: #E8F8F5;
-            --success-bg2: #A2E8DD;
-            --success-border: #1ABC9C;
-            --success-text: #117864;
-            --fail-bg1: #FFECEC;
-            --fail-bg2: #FFC4C4;
-            --fail-border: #E74C3C;
-            --fail-text: #922B21;
-            --score-text: #7D6B00;
-            --score-border: #F4D03F;
-        """
+        bg_anim = "linear-gradient(-45deg, #FF9A9E, #FECFEF, #A18CD1, #FBC2EB)"
+        primary = "#FF6B9D"
+        secondary = "#4ECDC4"
+        card_bg = "rgba(255, 255, 255, 0.5)"
+        text_color = "#2C3E50"
+        border_color = "rgba(255, 255, 255, 0.5)"
 
     st.markdown(f"""
     <style>
-        :root {{
-            {css_vars}
-            --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Open Sans', sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+        /* ANIMATED BACKGROUND */
+        .stApp {{
+            background: {bg_anim} !important;
+            background-size: 400% 400% !important;
+            animation: gradientBG 15s ease infinite !important;
+            font-family: 'Fredoka', 'Comic Sans MS', sans-serif !important;
+            color: {text_color} !important;
         }}
 
-        .stApp {{
-            background-color: var(--bg-app);
-            font-family: var(--font-family);
-            color: var(--text-color);
+        @keyframes gradientBG {{
+            0% {{ background-position: 0% 50%; }}
+            50% {{ background-position: 100% 50%; }}
+            100% {{ background-position: 0% 50%; }}
         }}
-        
-        /* Modern Rounded Kids Card Containers */
+
+        /* HIDE STREAMLIT HEADER AND FOOTER */
+        header[data-testid="stHeader"] {{ display: none !important; }}
+        footer {{ display: none !important; }}
+
+        /* GLASSMORPHISM CARDS */
         div[data-testid="stVerticalBlockBorderWrapper"] {{
-            background-color: var(--bg-card) !important;
-            padding: 26px !important;
-            border-radius: 28px !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06) !important;
-            border: 3px solid var(--card-border) !important;
+            background: {card_bg} !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 2px solid {border_color} !important;
+            border-radius: 30px !important;
+            padding: 24px !important;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15) !important;
             text-align: center !important;
-            margin-bottom: 20px !important;
-            color: var(--text-color) !important;
+            color: {text_color} !important;
         }}
-        
-        /* Playful Header Banner Gradient */
-        .title-banner {{
-            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
-            padding: 32px 20px;
-            border-radius: 32px;
-            color: white;
+
+        /* Ensure text in cards inherits color */
+        div[data-testid="stVerticalBlockBorderWrapper"] p, 
+        div[data-testid="stVerticalBlockBorderWrapper"] h1, 
+        div[data-testid="stVerticalBlockBorderWrapper"] h2 {{
+            color: {text_color} !important;
+        }}
+
+        /* MAGICAL BANNER */
+        .title-banner-compact {{
+            background: {card_bg};
+            backdrop-filter: blur(10px);
+            border: 2px solid {border_color};
+            padding: 20px;
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-            margin-bottom: 32px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            margin-bottom: 20px;
         }}
         
-        .title-banner h1 {{
-            font-size: 46px !important;
-            font-weight: 900 !important;
-            color: white !important;
+        .title-banner-compact h2 {{
+            font-size: 38px !important;
+            font-weight: 700 !important;
+            color: {text_color} !important;
             margin: 0 !important;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.12);
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+            font-family: 'Fredoka', sans-serif !important;
         }}
-        
-        .title-banner p {{
+
+        /* COMPACT SCOREBOARD - GLASS */
+        .score-board-compact {{
+            background: {card_bg};
+            backdrop-filter: blur(8px);
+            border: 2px solid {border_color};
+            border-radius: 20px;
+            padding: 12px 15px;
             font-size: 20px;
-            margin: 12px 0 0 0;
-            opacity: 0.95;
-            font-weight: bold;
+            font-weight: 700;
+            color: {text_color};
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+            font-family: 'Fredoka', sans-serif !important;
+        }}
+
+        /* TARGET BOX - GLASS CIRCLE */
+        .target-box-compact {{
+            background: {card_bg};
+            backdrop-filter: blur(8px);
+            border: 4px dashed {primary};
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }}
         
-        /* Large Target Box Display */
-        .target-box {{
-            background-color: var(--soft-bg);
-            border: 4px dashed var(--highlight);
-            border-radius: 24px;
-            padding: 15px;
-            margin: 15px 0;
-        }}
-        
-        .target-num {{
-            font-size: 140px !important;
-            font-weight: 900;
-            color: var(--highlight);
+        .target-num-compact {{
+            font-size: 72px !important;
+            font-weight: 700;
+            color: {primary};
             line-height: 1;
             margin: 0;
+            font-family: 'Fredoka', sans-serif !important;
         }}
-        
-        .object-display {{
-            font-size: 58px;
-            letter-spacing: 6px;
-            margin: 18px 0;
-        }}
-        
-        .object-label {{
-            font-size: 30px !important;
-            color: var(--text-dark);
-            font-weight: 800;
-            margin-bottom: 5px;
-        }}
-        
-        /* Bright Yellow Kids Scoreboard */
-        .score-board {{
-            background-color: var(--score-bg);
-            border: 3px solid var(--score-border);
-            border-radius: 22px;
-            padding: 16px;
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--score-text);
+
+        .object-label-compact {{
+            font-size: 26px !important;
+            color: {text_color};
+            font-weight: 700;
             text-align: center;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            font-family: 'Fredoka', sans-serif !important;
         }}
-        
-        /* High-contrast Success/Fail Cards */
-        .success-card {{
-            background: linear-gradient(135deg, var(--success-bg1), var(--success-bg2));
-            border: 3px solid var(--success-border);
-            padding: 30px;
-            border-radius: 26px;
+
+        .object-display-compact {{
+            font-size: 38px;
+            letter-spacing: 5px;
+            margin: 15px 0;
             text-align: center;
-            color: var(--success-text);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            white-space: normal;
+            word-wrap: break-word;
+        }}
+
+        /* BEAUTIFUL CANVAS FRAME */
+        .canvas-container {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15), inset 0 0 0 8px #F8F9FA;
+            background-color: #FFFFFF;
+            border: 10px solid {primary};
+            padding: 5px;
+            position: relative;
         }}
         
-        .fail-card {{
-            background: linear-gradient(135deg, var(--fail-bg1), var(--fail-bg2));
-            border: 3px solid var(--fail-border);
-            padding: 30px;
-            border-radius: 26px;
-            text-align: center;
-            color: var(--fail-text);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }}
-        
-        /* Rounded buttons adjustments & animations */
+        /* PREMIUM BUTTONS */
         div.stButton > button, button[data-testid="baseButton-secondary"], button[data-testid="baseButton-primary"] {{
-            border-radius: 24px !important;
-            font-weight: 900 !important;
-            font-size: 18px !important;
-            padding: 12px 28px !important;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            background-color: var(--primary-accent) !important;
+            border-radius: 30px !important;
+            font-weight: 700 !important;
+            font-size: 20px !important;
+            padding: 12px 30px !important;
+            transition: all 0.3s ease !important;
+            background: linear-gradient(135deg, {primary}, {secondary}) !important;
             color: white !important;
             border: none !important;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
         }}
         
         div.stButton > button:hover, button[data-testid="baseButton-secondary"]:hover, button[data-testid="baseButton-primary"]:hover {{
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            background-color: var(--secondary-accent) !important;
-            color: white !important;
-        }}
-        
-        /* Ensure metrics have high-contrast text */
-        div[data-testid="stMetricValue"], div[data-testid="stMetricLabel"], [data-testid="stMetricValue"] > div {{
-            color: var(--text-color) !important;
-        }}
-        
-        /* Specific animation for primary button */
-        button[data-testid="baseButton-primary"] {{
-            animation: pulse 2s infinite;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25) !important;
+            filter: brightness(1.1);
         }}
 
-        @keyframes pulse {{
-            0% {{
-                transform: scale(1);
-            }}
-            50% {{
-                transform: scale(1.03);
-            }}
-            100% {{
-                transform: scale(1);
-            }}
+        /* SUCCESS & FAIL CARDS - GLASS */
+        .success-card, .fail-card {{
+            background: {card_bg};
+            backdrop-filter: blur(12px);
+            border: 2px solid {border_color};
+            padding: 30px;
+            border-radius: 30px;
+            text-align: center;
+            color: {text_color};
+            box-shadow: 0 10px 30px rgba(31, 38, 135, 0.2);
+            margin-bottom: 20px;
         }}
-        /* Hide Streamlit top header (Deploy button & menu) */
-        [data-testid="stHeader"] {{
-            display: none !important;
+
+        /* RADIO BUTTON (Theme Selector) ENHANCEMENTS */
+        div.row-widget.stRadio > div {{
+            background: {card_bg} !important;
+            backdrop-filter: blur(10px) !important;
+            padding: 10px 20px !important;
+            border-radius: 25px !important;
+            display: flex !important;
+            justify-content: center !important;
+            border: 2px solid {border_color} !important;
+            gap: 20px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }}
+
+        div.row-widget.stRadio [data-testid="stWidgetLabel"] p {{
+            color: {text_color} !important;
+            font-weight: 700 !important;
+            font-size: 18px !important;
         }}
         
     </style>
