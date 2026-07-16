@@ -2,32 +2,42 @@ import streamlit as st
 
 def load_custom_css(theme="🦄 Magic"):
     if theme == "🚀 Space":
-        bg_anim = "linear-gradient(-45deg, #0B0C10, #1F2833, #111B24, #1B263B)"
-        primary = "#66FCF1"
-        secondary = "#45A29E"
-        card_bg = "rgba(11, 12, 16, 0.65)"
-        text_color = "#FFFFFF"
-        border_color = "rgba(102, 252, 241, 0.3)"
+        bg_anim = "linear-gradient(-45deg, #A9C9FF, #FFBBEC, #C3A6FF, #FFC4E1)" # Cosmic Pastel Nebula
+        primary = "#9B5DE5" # Bright Cosmic Purple
+        secondary = "#7B3FE4" # 3D Shadow Purple
+        card_bg = "rgba(255, 255, 255, 0.85)" # Clear light card
+        text_color = "#2C3E50" # Dark highly-visible text
+        border_color = "#9B5DE5" # Purple borders
     elif theme == "🦖 Dino":
         bg_anim = "linear-gradient(-45deg, #FDFBF7, #F4F1DE, #E07A5F, #81B29A)"
         primary = "#81B29A"
-        secondary = "#F2CC8F"
-        card_bg = "rgba(253, 251, 247, 0.65)"
+        secondary = "#E07A5F"
+        card_bg = "rgba(253, 251, 247, 0.9)"
         text_color = "#3D405B"
-        border_color = "rgba(129, 178, 154, 0.4)"
+        border_color = "#E07A5F"
     else: # Magic
         bg_anim = "linear-gradient(-45deg, #FF9A9E, #FECFEF, #A18CD1, #FBC2EB)"
         primary = "#FF6B9D"
-        secondary = "#4ECDC4"
-        card_bg = "rgba(255, 255, 255, 0.5)"
+        secondary = "#9B5DE5"
+        card_bg = "rgba(255, 255, 255, 0.85)"
         text_color = "#2C3E50"
-        border_color = "rgba(255, 255, 255, 0.5)"
+        border_color = "#FF6B9D"
 
     st.markdown(f"""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap');
 
-        /* ANIMATED BACKGROUND */
+        /* FULLSCREEN IMMERSION: Hide Streamlit Padding & Margins */
+        .block-container {{
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            max-width: 1200px !important;
+        }}
+        
+        header[data-testid="stHeader"], footer {{ display: none !important; }}
+        
         .stApp {{
             background: {bg_anim} !important;
             background-size: 400% 400% !important;
@@ -42,160 +52,171 @@ def load_custom_css(theme="🦄 Magic"):
             100% {{ background-position: 0% 50%; }}
         }}
 
-        /* HIDE STREAMLIT HEADER AND FOOTER */
-        header[data-testid="stHeader"] {{ display: none !important; }}
-        footer {{ display: none !important; }}
-
-        /* GLASSMORPHISM CARDS */
-        div[data-testid="stVerticalBlockBorderWrapper"] {{
-            background: {card_bg} !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
-            border: 2px solid {border_color} !important;
-            border-radius: 30px !important;
-            padding: 24px !important;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15) !important;
-            text-align: center !important;
-            color: {text_color} !important;
-        }}
-
-        /* Ensure text in cards inherits color */
-        div[data-testid="stVerticalBlockBorderWrapper"] p, 
-        div[data-testid="stVerticalBlockBorderWrapper"] h1, 
-        div[data-testid="stVerticalBlockBorderWrapper"] h2 {{
-            color: {text_color} !important;
-        }}
-
-        /* MAGICAL BANNER */
-        .title-banner-compact {{
-            background: {card_bg};
-            backdrop-filter: blur(10px);
-            border: 2px solid {border_color};
-            padding: 20px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            margin-bottom: 20px;
-        }}
-        
-        .title-banner-compact h2 {{
-            font-size: 38px !important;
-            font-weight: 700 !important;
-            color: {text_color} !important;
-            margin: 0 !important;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
-            font-family: 'Fredoka', sans-serif !important;
-        }}
-
-        /* COMPACT SCOREBOARD - GLASS */
-        .score-board-compact {{
-            background: {card_bg};
-            backdrop-filter: blur(8px);
-            border: 2px solid {border_color};
-            border-radius: 20px;
-            padding: 12px 15px;
-            font-size: 20px;
-            font-weight: 700;
-            color: {text_color};
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 12px;
-            font-family: 'Fredoka', sans-serif !important;
-        }}
-
-        /* TARGET BOX - GLASS CIRCLE */
-        .target-box-compact {{
-            background: {card_bg};
-            backdrop-filter: blur(8px);
-            border: 4px dashed {primary};
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
+        /* HUD - HEADS UP DISPLAY */
+        .hud-container {{
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            margin: 10px auto;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-        }}
-        
-        .target-num-compact {{
-            font-size: 72px !important;
-            font-weight: 700;
-            color: {primary};
-            line-height: 1;
-            margin: 0;
-            font-family: 'Fredoka', sans-serif !important;
-        }}
-
-        .object-label-compact {{
-            font-size: 26px !important;
-            color: {text_color};
-            font-weight: 700;
-            text-align: center;
-            font-family: 'Fredoka', sans-serif !important;
-        }}
-
-        .object-display-compact {{
-            font-size: 38px;
-            letter-spacing: 5px;
-            margin: 15px 0;
-            text-align: center;
-            white-space: normal;
-            word-wrap: break-word;
-        }}
-
-        /* THEME SELECTOR GLASS PILL */
-        .theme-selector-wrapper {{
             background: {card_bg};
-            backdrop-filter: blur(10px);
-            border: 2px solid {border_color};
+            backdrop-filter: blur(15px);
+            border: 4px solid {border_color};
             border-radius: 40px;
-            padding: 8px 15px;
-            margin: 0 auto 20px auto;
-            max-width: 450px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-            display: flex;
-            justify-content: center;
+            padding: 10px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
         }}
         
+        /* THEME SELECTOR IN HUD */
+        div.row-widget.stRadio > div {{
+            background: transparent !important;
+            display: flex !important;
+            gap: 15px !important;
+        }}
         div.row-widget.stRadio p {{
             font-size: 18px !important;
-            font-weight: 700 !important;
+            font-weight: 800 !important;
             color: {text_color} !important;
-            padding-right: 15px !important;
         }}
         
-        /* PREMIUM BUTTONS */
-        div.stButton > button, button[data-testid="baseButton-secondary"], button[data-testid="baseButton-primary"] {{
-            border-radius: 30px !important;
-            font-weight: 700 !important;
-            font-size: 20px !important;
-            padding: 12px 30px !important;
-            transition: all 0.3s ease !important;
-            background: linear-gradient(135deg, {primary}, {secondary}) !important;
-            color: white !important;
-            border: none !important;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+        /* SCORE IN HUD */
+        .hud-score {{
+            display: flex;
+            gap: 20px;
+            font-size: 20px;
+            font-weight: 800;
+            color: {text_color};
         }}
-        
-        div.stButton > button:hover, button[data-testid="baseButton-secondary"]:hover, button[data-testid="baseButton-primary"]:hover {{
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25) !important;
-            filter: brightness(1.1);
+        .hud-score span {{
+            background: rgba(0,0,0,0.05);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 2px solid {primary};
         }}
 
-        /* SUCCESS & FAIL CARDS - GLASS */
-        .success-card, .fail-card {{
-            background: {card_bg};
-            backdrop-filter: blur(12px);
-            border: 2px solid {border_color};
-            padding: 30px;
-            border-radius: 30px;
-            text-align: center;
-            color: {text_color};
-            box-shadow: 0 10px 30px rgba(31, 38, 135, 0.2);
-            margin-bottom: 20px;
+        /* THE GAME CONSOLE (Main Device) - Applied to Streamlit border container */
+        div[data-testid="stVerticalBlockBorderWrapper"] {{
+            background: {card_bg} !important;
+            backdrop-filter: blur(20px) !important;
+            border: 12px solid {border_color} !important;
+            border-radius: 50px !important;
+            padding: 30px !important;
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.1),
+                0 20px 50px rgba(0,0,0,0.3),
+                0 0 0 8px rgba(255,255,255,0.4) !important;
+            margin: 0 auto !important;
+            max-width: 950px !important;
+            text-align: center !important;
+            position: relative !important;
         }}
+        
+        /* Console Speaker/Camera detail at the top */
+        .game-console::before {{
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 12px;
+            background: {border_color};
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }}
+
+        /* THE MISSION SCREEN (Top part of console) */
+        .mission-screen {{
+            background: rgba(255,255,255,0.5);
+            border: 4px dashed {primary};
+            border-radius: 30px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }}
+        .mission-title {{
+            font-size: 24px;
+            font-weight: 800;
+            color: {text_color};
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }}
+        .mission-target {{
+            font-size: 80px;
+            font-weight: 900;
+            color: {primary};
+            line-height: 1;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+        }}
+        .mission-emoji {{
+            font-size: 40px;
+            letter-spacing: -5px;
+        }}
+
+        /* PERFECT CANVAS BORDER & CENTERING */
+        iframe[title="streamlit_drawable_canvas.st_canvas"] {{
+            border: 8px solid {border_color};
+            border-radius: 10px !important;
+            max-width: 290px !important; 
+            min-height: 325px;
+            margin: auto !important;
+            display: block !important;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5) !important;
+        }}
+
+        /* RESULT CARDS (CONGRATS/FAIL BOXES) */
+        .success-card {{
+            background: {card_bg};
+            backdrop-filter: blur(20px);
+            border: 8px solid {primary};
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }}
+
+        .fail-card {{
+            background: {card_bg};
+            backdrop-filter: blur(20px);
+            border: 8px solid #E74C3C;
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }}
+
+        /* CHUNKY 3D ARCADE BUTTONS */
+        div.stButton > button, button[data-testid="baseButton-secondary"], button[data-testid="baseButton-primary"] {{
+            border-radius: 20px !important;
+            font-weight: 900 !important;
+            font-size: 24px !important;
+            padding: 15px 40px !important;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: {primary} !important;
+            color: white !important;
+            border: none !important;
+            /* 3D Drop Shadow Effect */
+            box-shadow: 0 10px 0 {secondary}, 0 15px 20px rgba(0,0,0,0.2) !important;
+            transition: all 0.1s ease !important;
+            position: relative;
+            top: 0;
+            width: 100%;
+        }}
+        
+        div.stButton > button:active, button[data-testid="baseButton-secondary"]:active, button[data-testid="baseButton-primary"]:active {{
+            /* Press down effect */
+            top: 10px;
+            box-shadow: 0 0px 0 {secondary}, 0 5px 10px rgba(0,0,0,0.2) !important;
+            background: {primary} !important;
+        }}
+        
+        /* Cleaned up old border hiding rule */
 
     </style>
     """, unsafe_allow_html=True)

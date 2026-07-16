@@ -123,6 +123,13 @@ if "show_result" not in st.session_state:
 if "canvas_key" not in st.session_state:
     st.session_state.canvas_key = 0
 
+if "last_status" not in st.session_state:
+    st.session_state.last_status = None
+if "prediction" not in st.session_state:
+    st.session_state.prediction = None
+if "model_score" not in st.session_state:
+    st.session_state.model_score = 0
+
 # ===============================
 # CALLBACKS TO PREVENT BALLOON BUG
 # ===============================
@@ -139,151 +146,142 @@ def try_again_action():
 # HEADER BANNER
 # ===============================
 # ===============================
-# COMPACT HEADER BANNER
+# GAME HUD (Heads Up Display)
 # ===============================
-st.markdown(f'<div class="title-banner-compact"><h2>{app_title}</h2></div>', unsafe_allow_html=True)
+learning_score = (st.session_state.correct_count / st.session_state.total_count * 100) if st.session_state.total_count > 0 else 0
+hud_html = f'''
+<div class="hud-container">
+    <div style="display:flex; align-items:center;">
+        <h3 style="margin:0; margin-right:15px; font-weight:900;">{app_title}</h3>
+    </div>
+    <div class="hud-score">
+        <span>⭐ {st.session_state.correct_count}</span>
+        <span>📝 {st.session_state.total_count}</span>
+        <span>🏆 {learning_score:.0f}%</span>
+    </div>
+</div>
+'''
+st.markdown(hud_html, unsafe_allow_html=True)
 
 # ===============================
-# COMPACT SCORE DISPLAY
+# SCENE SWAPPING LOGIC
 # ===============================
-m1, m2, m3 = st.columns(3)
-
-with m1:
-    st.markdown(f'<div class="score-board-compact">⭐ Stars: {st.session_state.correct_count}</div>', unsafe_allow_html=True)
-
-with m2:
-    st.markdown(f'<div class="score-board-compact">📝 Tries: {st.session_state.total_count}</div>', unsafe_allow_html=True)
-
-with m3:
-    if st.session_state.total_count > 0:
-        learning_score = (st.session_state.correct_count / st.session_state.total_count) * 100
-    else:
-        learning_score = 0
-    st.markdown(f'<div class="score-board-compact">🏆 Power: {learning_score:.0f}%</div>', unsafe_allow_html=True)
-
-# ===============================
-# PLAYSPACE COLUMNS (Compact & Mobile Responsive)
-# ===============================
-left_col, right_col = st.columns([1, 1], gap="medium")
 
 target = st.session_state.target_digit
 emoji, object_name = number_objects[target]
+object_display = emoji if target == 0 else emoji * target
 
-with left_col:
+if not st.session_state.show_result:
+    # ===============================
+    # SCENE 1: THE GAME CONSOLE
+    # ===============================
     with st.container(border=True):
-        st.markdown('<p style="font-size: 16px; font-weight: bold; margin:0; text-align:center;">Your Challenge:</p>', unsafe_allow_html=True)
+        # Mission Screen
+        st.markdown(f'''
+        <div class="mission-screen">
+            <div>
+                <p class="mission-title">MISSION: Draw this number!</p>
+                <p style="font-size:20px; font-weight:bold; margin:0; color:#555;">{target} {object_name}</p>
+            </div>
+            <div class="mission-target">{target}</div>
+            <div class="mission-emoji">{object_display}</div>
+        </div>
+        ''', unsafe_allow_html=True)
         
-        t_left, t_right = st.columns([1, 2])
-        with t_left:
-            st.markdown(f'<div class="target-box-compact"><div class="target-num-compact">{target}</div></div>', unsafe_allow_html=True)
-        with t_right:
-            st.markdown(f'<div style="display: flex; flex-direction: column; justify-content: center; height: 80px;"><div class="object-label-compact">{target} {object_name}</div></div>', unsafe_allow_html=True)
-            
-        object_display = emoji if target == 0 else emoji * target
-        st.markdown(f'<div class="object-display-compact">{object_display}</div>', unsafe_allow_html=True)
-
-with right_col:
-    with st.container(border=True):
-        st.markdown(f'<p style="font-size: 16px; font-weight: bold; margin: 0; text-align:center;">✏️ Draw the number {target}:</p>', unsafe_allow_html=True)
-        
-        bg_color = "#FFFFFF"
-        draw_mode = "freedraw"
-        stroke_color = "#000000"
-
+        # Interactive Screen
         canvas = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",
-            stroke_width=18,
-            stroke_color=stroke_color,
-            background_color=bg_color,
-            height=280,
+            stroke_width=20,
+            stroke_color="#000000",
+            background_color="#FFFFFF",
+            height=280, 
             width=280,
-            drawing_mode=draw_mode,
+            drawing_mode="freedraw",
             key=f"canvas_{st.session_state.canvas_key}"
         )
         
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # 3D Arcade Button
         if st.button(action_button_text, use_container_width=True, type="primary"):
             if canvas.image_data is None:
-                st.warning("Please draw a number first 😊")
+                st.toast("Please draw a number first! 😊", icon="🎨")
             else:
-                st.session_state.show_result = True
-                st.rerun()
-
-# ===============================
-# CNN PROCESSING & RENDERING (Logic Safe)
-# ===============================
-if st.session_state.show_result:
-    st.markdown("---")
-    
-    img = Image.fromarray(canvas.image_data.astype("uint8"))
-    img = img.convert("L")
-    img_array = np.array(img)
-    
-    # Whiteboard uses white background, CNN expects black background
-    img_array = 255 - img_array
-
-    if np.max(img_array) < 50:
-        st.warning("Please draw something beautiful on the board first!")
-        st.session_state.show_result = False
-    else:
-        # Pipeline calculations
-        coords = np.column_stack(np.where(img_array > 0))
-        y_min, x_min = coords.min(axis=0)
-        y_max, x_max = coords.max(axis=0)
-
-        digit = img_array[y_min:y_max+1, x_min:x_max+1]
-        digit_img = Image.fromarray(digit)
-        digit_img.thumbnail((20, 20))
-
-        final_img = Image.new("L", (28, 28), 0)
-        x_offset = (28 - digit_img.size[0]) // 2
-        y_offset = (28 - digit_img.size[1]) // 2
-        final_img.paste(digit_img, (x_offset, y_offset))
-
-        final_array = np.array(final_img)
-        final_array = final_array.astype("float32") / 255.0
-        cnn_input = final_array.reshape(1, 28, 28, 1)
-
-        prediction_prob = model.predict(cnn_input, verbose=0)
-        prediction = np.argmax(prediction_prob)
-        model_score = np.max(prediction_prob) * 100
-
-        st.session_state.total_count += 1
-
-        # SUCCESS
-        if prediction == target:
-            st.session_state.correct_count += 1
-            if theme == "🚀 Space":
-                st.snow()
-            elif theme =="🦖 Dino":
-                st.balloons()
-            elif theme =="🦄 Magic":
-                st.balloons()
-            message = random.choice(encouragements)
-            
-            st.markdown(f'<div class="success-card"><h2 style="margin:0; font-size:28px;">{message}</h2><p style="font-size:18px; margin: 10px 0;">You beautifully wrote the number <b style="font-size:24px;">{prediction}</b>!</p><span style="background: rgba(26, 188, 156, 0.15); padding: 4px 12px; border-radius: 8px; font-size:12px; font-weight:bold;">✨ Match Meter: {model_score:.0f}%</span></div>', unsafe_allow_html=True)
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.button("🚀 Journey to a New Number", use_container_width=True, on_click=next_number_action)
-
-        # TRY AGAIN
-        else:
-            st.markdown(f'<div class="fail-card"><h2 style="margin:0; font-size:26px;">😊 Splendid Effort!</h2><p style="font-size:18px; margin: 10px 0;">Oops! My magic lens saw a <b>{prediction}</b>, let\'s try drawing a <b>{target}</b> again!</p><span style="background: rgba(231, 76, 60, 0.15); padding: 4px 12px; border-radius: 8px; font-size:12px; font-weight:bold;">✨ Match Meter: {model_score:.0f}%</span></div>', unsafe_allow_html=True)
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            action_col1, action_col2 = st.columns(2)
-            
-            with action_col1:
-                st.button("🔄 Give it Another Go!", use_container_width=True, on_click=try_again_action)
+                img = Image.fromarray(canvas.image_data.astype("uint8")).convert("L")
+                img_array = 255 - np.array(img)
+        
+                if np.max(img_array) < 50:
+                    st.toast("The board is empty! Draw something first! ⚠️", icon="⚠️")
+                else:
+                    coords = np.column_stack(np.where(img_array > 0))
+                    y_min, x_min = coords.min(axis=0)
+                    y_max, x_max = coords.max(axis=0)
+        
+                    digit = img_array[y_min:y_max+1, x_min:x_max+1]
+                    digit_img = Image.fromarray(digit)
+                    digit_img.thumbnail((20, 20))
+        
+                    final_img = Image.new("L", (28, 28), 0)
+                    x_offset = (28 - digit_img.size[0]) // 2
+                    y_offset = (28 - digit_img.size[1]) // 2
+                    final_img.paste(digit_img, (x_offset, y_offset))
+        
+                    final_array = np.array(final_img).astype("float32") / 255.0
+                    cnn_input = final_array.reshape(1, 28, 28, 1)
+        
+                    prediction_prob = model.predict(cnn_input, verbose=0)
+                    prediction = np.argmax(prediction_prob)
+                    model_score = np.max(prediction_prob) * 100
                     
-            with action_col2:
-                st.button("⏭ Try a Different Number", use_container_width=True, on_click=next_number_action)
+                    st.session_state.total_count += 1
+                    st.session_state.prediction = prediction
+                    st.session_state.model_score = model_score
+                    
+                    if prediction == target:
+                        st.session_state.correct_count += 1
+                        st.session_state.last_status = "success"
+                    else:
+                        st.session_state.last_status = "fail"
+                    
+                    st.session_state.show_result = True
+                    st.rerun()
 
-# ===============================
-# FOOTER
-# ===============================
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown("""
-<div style='text-align:center; padding: 20px;'>
-    <h3 style='font-weight:bold;'>🌈 Every single trace makes you sharper! Keep going, Little Genius! 🌈</h3>
-</div>
-""", unsafe_allow_html=True)
+else:
+    # ===============================
+    # SCENE 2: THE CELEBRATION BOX
+    # ===============================
+    st.markdown('<div style="height: 50px;"></div>', unsafe_allow_html=True) # Spacer
+    
+    if st.session_state.last_status == "success":
+        if theme == "🚀 Space": st.snow()
+        else: st.balloons()
+        
+        message = random.choice(encouragements)
+        st.markdown(f'''
+        <div class="success-card" style="max-width: 600px; margin: 0 auto; transform: scale(1.1);">
+            <h1 style="font-size:50px; margin-bottom:10px;">{message}</h1>
+            <p style="font-size:24px;">You beautifully wrote the number <b style="font-size:40px;">{st.session_state.prediction}</b>!</p>
+            <div style="margin: 20px 0; font-size:60px;">{object_display}</div>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1,2,1])
+        with col2:
+            st.button("🌟 NEXT LEVEL! 🌟", use_container_width=True, on_click=next_number_action, type="primary")
+
+    else:
+        st.markdown(f'''
+        <div class="fail-card" style="max-width: 600px; margin: 0 auto; transform: scale(1.1);">
+            <h1 style="font-size:45px; margin-bottom:10px;">😊 Splendid Effort!</h1>
+            <p style="font-size:24px;">The computer saw a <b style="font-size:30px;">{st.session_state.prediction}</b>.</p>
+            <p style="font-size:24px;">Let's try drawing a <b style="font-size:30px;">{target}</b> again!</p>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        action_col1, action_col2 = st.columns(2)
+        with action_col1:
+            st.button("🔄 RETRY LEVEL", use_container_width=True, on_click=try_again_action)
+        with action_col2:
+            st.button("⏭ SKIP LEVEL", use_container_width=True, on_click=next_number_action)
