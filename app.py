@@ -19,17 +19,15 @@ st.set_page_config(
 )
 
 # Theme Selection Layout
-st.markdown('<div class="theme-selector-wrapper">', unsafe_allow_html=True)
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     theme = st.radio(
         "🌍 Choose Your World!",
-        ["🦄 Magic", "🚀 Space", "🦖 Dino"],
+        ["🦄 Magic", "🚀 Space", "🦖 Dino", "🌊 Ocean"],
         index=0,
         horizontal=True,
         label_visibility="collapsed"
     )
-st.markdown('</div>', unsafe_allow_html=True)
 
 load_custom_css(theme)
 
@@ -83,6 +81,22 @@ elif theme == "🦖 Dino":
     app_title = "🦖 Dino Number Academy 🌿"
     app_subtitle = "Draw the numbers and discover dinosaurs!"
     action_button_text = "✨ ROAR! CHECK MY DRAWING! ✨"
+elif theme == "🌊 Ocean":
+    number_objects = {
+        0: ("🫧", "Bubbles"),
+        1: ("🐋", "Whale"),
+        2: ("🐬", "Dolphins"),
+        3: ("🐢", "Turtles"),
+        4: ("🦀", "Crabs"),
+        5: ("🦑", "Squids"),
+        6: ("🐠", "Fish"),
+        7: ("🐚", "Shells"),
+        8: ("🐙", "Octopuses"),
+        9: ("🦈", "Sharks")
+    }
+    app_title = "🌊 Ocean Number Academy 🐠"
+    app_subtitle = "Draw the numbers and dive into the deep!"
+    action_button_text = "✨ SPLASH! CHECK MY DRAWING! ✨"
 else:
     number_objects = {
         0: ("🍩", "Donuts"),
@@ -253,7 +267,7 @@ else:
     st.markdown('<div style="height: 50px;"></div>', unsafe_allow_html=True) # Spacer
     
     if st.session_state.last_status == "success":
-        if theme == "🚀 Space": st.snow()
+        if theme == "🚀 Space" or theme == "🌊 Ocean": st.snow()
         else: st.balloons()
         
         message = random.choice(encouragements)

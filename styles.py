@@ -2,12 +2,12 @@ import streamlit as st
 
 def load_custom_css(theme="🦄 Magic"):
     if theme == "🚀 Space":
-        bg_anim = "linear-gradient(-45deg, #A9C9FF, #FFBBEC, #C3A6FF, #FFC4E1)" # Cosmic Pastel Nebula
-        primary = "#9B5DE5" # Bright Cosmic Purple
-        secondary = "#7B3FE4" # 3D Shadow Purple
-        card_bg = "rgba(255, 255, 255, 0.85)" # Clear light card
-        text_color = "#2C3E50" # Dark highly-visible text
-        border_color = "#9B5DE5" # Purple borders
+        bg_anim = "linear-gradient(-45deg, #090a0f, #1b1b3a, #4a1c40, #0a192f)" # Deep Dark Space & Nebula
+        primary = "#00D4FF" # Glowing Neon Cyan
+        secondary = "#0088AA" # Deep Cyan Shadow
+        card_bg = "rgba(15, 15, 35, 0.85)" # Dark Glassy Panel
+        text_color = "#E0F7FA" # Ice White/Cyan text
+        border_color = "#00D4FF" # Neon Cyan borders
     elif theme == "🦖 Dino":
         bg_anim = "linear-gradient(-45deg, #FDFBF7, #F4F1DE, #E07A5F, #81B29A)"
         primary = "#81B29A"
@@ -15,13 +15,20 @@ def load_custom_css(theme="🦄 Magic"):
         card_bg = "rgba(253, 251, 247, 0.9)"
         text_color = "#3D405B"
         border_color = "#E07A5F"
-    else: # Magic
-        bg_anim = "linear-gradient(-45deg, #FF9A9E, #FECFEF, #A18CD1, #FBC2EB)"
-        primary = "#FF6B9D"
-        secondary = "#9B5DE5"
+    elif theme == "🌊 Ocean":
+        bg_anim = "linear-gradient(-45deg, #4facfe, #00f2fe, #43e97b, #38f9d7)" # Vibrant underwater
+        primary = "#00B4DB"
+        secondary = "#0083B0"
         card_bg = "rgba(255, 255, 255, 0.85)"
-        text_color = "#2C3E50"
-        border_color = "#FF6B9D"
+        text_color = "#003A4D"
+        border_color = "#00B4DB"
+    else: # Magic
+        bg_anim = "linear-gradient(-45deg, #FF9A9E, #FECFEF, #F6D365, #FDA085)" # Sunrise Magical Pastel
+        primary = "#FF6384" # Vibrant Coral Pink
+        secondary = "#D83A56" # Deep Red/Pink Shadow
+        card_bg = "rgba(255, 255, 255, 0.9)" # Clear glassy card
+        text_color = "#4A154B" # Deep Magical Purple for contrast
+        border_color = "#FF6384" # Pink borders
 
     st.markdown(f"""
     <style>
@@ -68,15 +75,31 @@ def load_custom_css(theme="🦄 Magic"):
         }}
         
         /* THEME SELECTOR IN HUD */
+        div[data-testid="stRadio"] {{
+            background: {card_bg} !important;
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 10px 20px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 2px solid {border_color};
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: center;
+        }}
         div.row-widget.stRadio > div {{
             background: transparent !important;
             display: flex !important;
             gap: 15px !important;
+            justify-content: center !important;
         }}
-        div.row-widget.stRadio p {{
+        div[data-testid="stRadio"] p, 
+        div[data-testid="stRadio"] label, 
+        div[data-testid="stRadio"] span {{
             font-size: 18px !important;
             font-weight: 800 !important;
             color: {text_color} !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }}
         
         /* SCORE IN HUD */
@@ -106,6 +129,7 @@ def load_custom_css(theme="🦄 Magic"):
                 0 20px 50px rgba(0,0,0,0.3),
                 0 0 0 8px rgba(255,255,255,0.4) !important;
             margin: 0 auto !important;
+            padding: 5px;
             max-width: 950px !important;
             text-align: center !important;
             position: relative !important;
@@ -216,7 +240,42 @@ def load_custom_css(theme="🦄 Magic"):
             background: {primary} !important;
         }}
         
-        /* Cleaned up old border hiding rule */
+        /* Mobile Responsiveness for HUD */
+        @media (max-width: 600px) {{
+            .hud-container {{
+                flex-direction: column !important;
+                gap: 10px !important;
+                text-align: center !important;
+                padding: 15px !important;
+                border-radius: 25px !important;
+            }}
+            .hud-container h3 {{
+                font-size: 20px !important;
+                margin-right: 0 !important;
+                text-align: center !important;
+            }}
+            .hud-score {{
+                font-size: 16px !important;
+                justify-content: center !important;
+                flex-wrap: wrap !important;
+            }}
+            .mission-screen {{
+                flex-direction: column !important;
+                gap: 15px !important;
+                text-align: center !important;
+            }}
+            div[data-testid="stRadio"] {{
+                padding: 8px 10px !important;
+            }}
+            div[data-testid="stRadio"] p,
+            div[data-testid="stRadio"] label,
+            div[data-testid="stRadio"] span {{
+                font-size: 12px !important;
+            }}
+            div.row-widget.stRadio > div {{
+                gap: 5px !important;
+            }}
+        }}
 
     </style>
     """, unsafe_allow_html=True)
